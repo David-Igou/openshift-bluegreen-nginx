@@ -1,0 +1,41 @@
+{{ if .Values.blue.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "ocp-nginx-bluegreen.fullname" . }}-blue
+  labels:
+    release: {{ .Release.Name }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    app: {{ template "ocp-nginx-bluegreen.name" . }}
+    version: {{ .Values.blue.appVersion | quote }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ template "ocp-nginx-bluegreen.name" . }}
+      version: {{ .Values.blue.appVersion | quote }}
+      release: {{ .Release.Name }}
+      slot: blue
+  template:
+    metadata:
+      labels:
+        app: {{ template "ocp-nginx-bluegreen.name" . }}
+        version: {{ .Values.blue.appVersion | quote }}
+        release: {{ .Release.Name }}
+        slot: blue
+    spec:
+      containers:
+        - name: {{ template "ocp-nginx-bluegreen.name" . }}-blue
+          env:
+            - name: APP_COLOR
+              value: blue
+            - name: CURRENT_TIMESTAMP
+              value: {{ .Values.blue.timestamp }}
+          image: {{ .Values.blue.image }}
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 8081
+              protocol: TCP
+#if/then add/mount confimap
+{{ end }}

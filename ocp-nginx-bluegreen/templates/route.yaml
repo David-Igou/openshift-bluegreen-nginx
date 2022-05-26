@@ -1,0 +1,24 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: {{ include "ocp-nginx-bluegreen.name" . }}-production-route
+  labels:
+    app: {{ include "ocp-nginx-bluegreen.name" . }}
+    chart: {{ include "ocp-nginx-bluegreen.chart" . }}
+    release: {{ .Release.Name }}
+  annotations:
+    haproxy.router.openshift.io/balance: roundrobin  
+spec:
+  host: {{ .Values.route.host }}
+  port:
+    targetPort: http
+  tls:
+    termination: edge
+  to:
+    kind: Service
+    name: {{ include "ocp-nginx-bluegreen.name" . }}-service-blue
+    weight: {{ .Values.blue.weight }}
+  alternateBackends:
+  - kind: Service
+    name: {{ include "ocp-nginx-bluegreen.name" . }}-service-green
+    weight: {{ .Values.green.weight }}

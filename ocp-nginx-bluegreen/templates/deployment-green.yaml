@@ -1,0 +1,42 @@
+{{ if .Values.green.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "ocp-nginx-bluegreen.fullname" . }}-green
+  labels:
+    release: {{ .Release.Name }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    app: {{ template "ocp-nginx-bluegreen.name" . }}
+    version: {{ .Values.green.appVersion | quote }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ template "ocp-nginx-bluegreen.name" . }}
+      version: {{ .Values.green.appVersion | quote  }}
+      release: {{ .Release.Name }}
+      slot: green
+  template:
+    metadata:
+      labels:
+        app: {{ template "ocp-nginx-bluegreen.name" . }}
+        version: {{ .Values.green.appVersion | quote }}
+        release: {{ .Release.Name }}
+        slot: green
+    spec:
+      containers:
+        - name: {{ template "ocp-nginx-bluegreen.name" . }}-green
+          env:
+            - name: APP_COLOR
+              value: green
+            - name: CURRENT_TIMESTAMP
+              value: {{ .Values.green.timestamp }}
+          image: {{ .Values.green.image }} 
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 8081
+              protocol: TCP
+          # This (and the volumes section below) mount the config map as a volume.
+          # if/then add/mount cm
+{{ end }}

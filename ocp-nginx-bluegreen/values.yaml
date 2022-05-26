@@ -1,0 +1,19 @@
+nameOverride: polybius
+
+blue:
+  appVersion: 1.0
+  enabled: true
+  timestamp: "2022-05-01 00:00:00"
+  image: quay.io/igou/polybius:v1.0
+  weight: 100
+green:
+  appVersion: 1.1
+  enabled: true
+  timestamp: "2022-05-02 00:00:00"
+  image: quay.io/igou/polybius:v1.1
+  weight: 0
+
+route:
+  host: production-deployment-friday.apps.cluster-skkll.skkll.sandbox425.opentlc.com
+
+replicaCount: 3

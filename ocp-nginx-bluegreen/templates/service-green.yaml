@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "ocp-nginx-bluegreen.name" . }}-service-green
+  labels:
+    app: {{ include "ocp-nginx-bluegreen.name" . }}
+    chart: {{ include "ocp-nginx-bluegreen.chart" . }}
+    release: {{ .Release.Name }}
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8081
+      targetPort: 8081
+      protocol: TCP
+      name: http
+  selector:
+    app: {{ include "ocp-nginx-bluegreen.name" . }}
+    release: {{ .Release.Name }}
+    slot: green
