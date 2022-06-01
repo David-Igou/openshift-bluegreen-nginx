@@ -1,0 +1,13 @@
+{{ if .Values.blue.additionalconfiguration }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-additional-config-blue
+  labels:
+    release: {{ .Release.Name }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    app: {{ template "ocp-nginx-bluegreen.name" . }}
+    version: {{ .Values.blue.appVersion | quote }}
+data:
+  default.conf: {{ .Values.blue.additionalconfiguration | quote }}
+{{ end }}

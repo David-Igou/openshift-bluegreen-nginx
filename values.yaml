@@ -2,18 +2,46 @@ nameOverride: polybius
 
 blue:
   appVersion: 1.0
-  enabled: true
+  enabled: false
   timestamp: "2022-05-01 00:00:00"
   image: quay.io/igou/polybius:v1.0
-  weight: 100
+  weight: 0
+  additionalconfiguration: null
 green:
   appVersion: 1.1
-  enabled: true
+  enabled: false
   timestamp: "2022-05-02 00:00:00"
   image: quay.io/igou/polybius:v1.1
   weight: 0
+  additionalconfiguration: |
+    server {
+        listen       8081;
+        server_name  localhost;
+    
+        #access_log  /var/log/nginx/host.access.log  main;
+    
+        location /nginx_status {
+            stub_status;
+            access_log off;
+        }
+    
+        location / {
+            root   /usr/share/nginx/html;
+            index  index.html index.htm;
+        }
+    
+        #error_page  404              /404.html;
+    
+        # redirect server error pages to the static page /50x.html
+        #
+        error_page   500 502 503 504  /50x.html;
+        location = /50x.html {
+            root   /usr/share/nginx/html;
+        }
+    
+    }
 
 route:
-  host: production-deployment-friday.apps.cluster-skkll.skkll.sandbox425.opentlc.com
+  host: production-deployment-friday.apps.cluster-v879j.v879j.sandbox1667.opentlc.com
 
 replicaCount: 3

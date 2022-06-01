@@ -2,4 +2,4 @@ apiVersion: v1
 appVersion: "1.0"
 description: This helm chart does blue/green deployments of nginx on Openshift
 name: ocp-nginx-bluegreen
-version: 0.1
+version: "0.1"

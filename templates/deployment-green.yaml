@@ -37,6 +37,15 @@ spec:
             - name: http
               containerPort: 8081
               protocol: TCP
-          # This (and the volumes section below) mount the config map as a volume.
-          # if/then add/mount cm
+{{ if.Values.green.additionalconfiguration }}
+          volumeMounts:
+          - name: config-volume
+            mountPath: /etc/nginx/conf.d/
+      volumes:
+        - name: config-volume
+          configMap:
+            # Provide the name of the ConfigMap containing the files you want
+            # to add to the container
+            name: nginx-additional-config-green
+{{ end }}
 {{ end }}
